@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Research Assistant</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        form { margin-bottom: 20px; }
+        input[type="text"] { width: 100%; padding: 10px; margin-bottom: 10px; }
+        button { padding: 10px 20px; background-color: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        #results { margin-top: 20px; }
+        .summary { background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .source { border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 5px; }
+        .source h3 { margin-top: 0; }
+        .loading { display: none; color: #666; }
+    </style>
+</head>
+<body>
+    <h1>AI Research Assistant</h1>
+    <form id="researchForm">
+        <input type="text" id="query" placeholder="Enter your research query..." required>
+        <button type="submit">Research</button>
+    </form>
+    <div id="loading" class="loading">Searching and summarizing...</div>
+    <div id="results"></div>
+
+    <script>
+        document.getElementById('researchForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const query = document.getElementById('query').value;
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+
+            loading.style.display = 'block';
+            results.innerHTML = '';
+
+            try {
+                const response = await fetch('/research', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ query }),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                displayResults(data);
+            } catch (error) {
+                results.innerHTML = `<p>Error: ${error.message}</p>`;
+            } finally {
+                loading.style.display = 'none';
+            }
+        });
+
+        function displayResults(data) {
+            const results = document.getElementById('results');
+            results.innerHTML = `
+                <div class="summary">
+                    <h2>Overall Summary</h2>
+                    <p>${data.summary}</p>
+                </div>
+                <h2>Sources</h2>
+                ${data.sources.map(source => `
+                    <div class="source">
+                        <h3><a href="${source.url}" target="_blank">${source.title}</a></h3>
+                        <p>${source.summary}</p>
+                    </div>
+                `).join('')}
+            `;
+        }
+    </script>
+</body>
+</html>
