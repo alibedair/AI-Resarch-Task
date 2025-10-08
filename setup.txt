@@ -1,0 +1,36 @@
+Setup Instructions for AI-Powered Research Assistant Backend
+
+Prerequisites:
+- Node.js (version 14 or higher recommended)
+- npm (comes with Node.js)
+
+Installation Steps:
+
+1. Install Dependencies
+   Run: npm install
+
+2. Environment Configuration
+   Create a .env file in the root directory with your API keys:
+   OPENAI_API_KEY=your_openai_api_key_here
+   SERPAPI_API_KEY=your_serpapi_api_key_here
+   Note: The .env file already exists in your workspace - you may need to add the actual API keys.
+
+3. Build the Project (for production)
+   Run: npm run build
+
+4. Run the Application
+
+   For Development:
+   Run: npm run dev
+
+   For Production:
+   Run: npm start
+
+5. Access the Application
+   Open http://localhost:3000 in your browser for the web interface.
+
+API Usage:
+Send a POST request to /research with a JSON body like:
+{
+  "query": "Summarize the latest research on quantum computing"
+}
